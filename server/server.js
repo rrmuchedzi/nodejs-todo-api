@@ -52,6 +52,22 @@ app.get('/todos/:id', (req, res) => {
     }) 
 });
 
+app.delete('/todos/:id', (req, res) => {
+    let id = req.params.id;
+
+    if( !ObjectID.isValid(id) ){
+        return res.status(404).send({result: "Invalid ID For Deletion"});
+    }
+
+    Todo.findByIdAndRemove(id)
+    .then( (todo) => {
+        if(!todo) {
+            res.status(404).send({invalidRecord: "Record Does not exist"});
+        }
+        res.status(200).send({deleted: todo});
+    })
+})
+
 app.listen(port, () => {
     console.log(`Started listening at port : ${port}`);
 })
