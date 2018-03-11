@@ -45,7 +45,7 @@ app.get('/todos/:id', (req, res) => {
             res.status(404).send({recordError: 'No Such Record Exist'});
         }
 
-        res.status(200).send(todo);
+        res.status(200).send({todo});
     }).catch( (err) => {
         res.status(404).send({errorCatched: 'An Error Occured'});
     }) 
