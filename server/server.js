@@ -1,12 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-var mongoose = require('./db/mongoose');
-var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
+const mongoose = require('./db/mongoose');
+const {Todo} = require('./models/todo');
+const {User} = require('./models/user');
 
-var app = express();
-const port = 3000;
+const app = express();
 
 app.use(bodyParser.json()); //Middleware
 
@@ -17,7 +16,7 @@ app.post('/todos', (req, res) => {
 
     newTodo.save()
     .then((doc) => {
-        res.status(201).send(doc);
+        res.send(doc);
     })
     .catch((err) => {
         console.log('Error Occured: ', err);
@@ -25,6 +24,8 @@ app.post('/todos', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Started listening at port : ${port}`);
+app.listen(3000, () => {
+    console.log(`Started listening at port : ${3000}`);
 })
+
+module.exports = app;
