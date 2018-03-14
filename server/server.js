@@ -1,4 +1,5 @@
 const express = require('express');
+const lodash = require('lodash');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 
@@ -68,7 +69,31 @@ app.delete('/todos/:id', (req, res) => {
     }).catch( (err) => {
         res.status(400).send();
     });
-})
+});
+
+app.patch("/todos/:id", (req, res) => { //Use patch for updating data. Remember you can use any for anything
+    let id = req.params.id;
+    if(!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    let body = lodash.pick(req.body, ['text', 'completed']); // Secure measure to ensure only properties to be updated are updated and nothing else. So we select those we need
+    if(lodash.isBoolean(body.completed) && body.completed) {
+        body.completedAt = new Date().getTime(); // Returns as JS Timestamp. Number of Miliseconds between January 1, 1970 and the specified date
+    } else {
+        body.completed = false;
+        body.completedAt = null;
+    }
+
+    Todo.findByIdAndUpdate(id, {$set: body}, {new: true})
+    .then( (todo) => {
+        if(!todo) {
+            return res.status(404).send();
+        }
+        res.status(200).send({todo: todo});
+    }).catch( (err) => res.status(400).send());
+
+});
 
 app.listen(port, () => {
     console.log(`Started listening at port : ${port}`);
