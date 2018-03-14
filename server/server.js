@@ -22,7 +22,6 @@ app.post('/todos', (req, res) => {
         res.send(doc);
     })
     .catch((err) => {
-        console.log('Error Occured: ', err);
         res.status(400).send(err);
     });
 });
@@ -44,7 +43,7 @@ app.get('/todos/:id', (req, res) => {
 
     Todo.findById(id).then((todo) => {
         if(!todo) {
-            res.status(404).send({recordError: 'No Such Record Exist'});
+            return res.status(404).send({recordError: 'No Such Record Exist'});
         }
 
         res.status(200).send({todo});
